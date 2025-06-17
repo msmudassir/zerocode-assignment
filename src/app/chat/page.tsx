@@ -29,7 +29,6 @@ export default function ChatPage() {
       const aiText = result.response.text();
 
       setChat((prev) => [...prev, { userText: input, aiText }]);
-      speakText(aiText);
       setInput("");
     } catch (err) {
       console.error("Gemini API error:", err);
@@ -117,25 +116,9 @@ export default function ChatPage() {
           placeholder="Type your message..."
         />
         <div className="flex gap-2">
-          <button
-            onClick={handleInput}
-            disabled={loading}
-            className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition"
-          >
-            Send
-          </button>
-          <button
-            onClick={clearChat}
-            className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition"
-          >
-            Clear
-          </button>
-          <button
-            onClick={handleVoiceInput}
-            className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition"
-          >
-            🎙️ Speak
-          </button>
+          <button onClick={handleInput} disabled={loading} className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition"> Send </button>
+          <button onClick={clearChat} className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition"> Clear </button>
+          <button onClick={handleVoiceInput} className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition"> 🎙️ Speak </button>
         </div>
       </div>
     </div>
