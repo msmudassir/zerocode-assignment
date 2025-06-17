@@ -3,6 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
 export default function ChatPage() {
@@ -34,24 +41,34 @@ export default function ChatPage() {
   const clearChat = () => setChat([]);
 
   const handleVoiceInput = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || (window as any).webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const transcript = event.results[0][0].transcript;
-      setInput(transcript);
-    };
+      if (!SpeechRecognition) {
+        alert("Speech recognition not supported in this browser.");
+        return;
+      }
 
-    recognition.start();
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+      };
+
+      recognition.start();
+    }
   };
 
   const speakText = (text: string) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    window.speechSynthesis.speak(utterance);
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   useEffect(() => {
@@ -63,12 +80,15 @@ export default function ChatPage() {
       <div className="w-full max-w-3xl px-4">
         <div className="flex justify-between items-center mt-6 mb-4">
           <h1 className="text-3xl font-bold">🤖 ChatBot</h1>
-          <button onClick={() => setDarkMode(!darkMode)} className="px-3 py-1 rounded bg-rose-400 cursor-pointer dark:bg-gray-700 text-black dark:text-white hover:opacity-80">
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="px-3 py-1 rounded bg-rose-400 cursor-pointer dark:bg-gray-700 text-black dark:text-white hover:opacity-80"
+          >
             {darkMode ? "🌞 Light" : "🌙 Dark"}
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto mb-36">
           {chat.map((entry, index) => (
             <div key={index} className="mb-4">
               <div className="bg-stone-500 text-white rounded-xl p-3 text-right">
@@ -84,18 +104,38 @@ export default function ChatPage() {
         </div>
       </div>
 
-      <div className={`fixed bottom-0 left-1/2 [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)] transform -translate-x-1/2 w-full max-w-3xl  dark:bg-black border-t border-gray-300 dark:border-gray-700 p-4 flex flex-col sm:flex-row gap-3 z-50`}>
-        <input type="text" className={`flex-1 rounded-full px-4 py-3 border focus:outline-none ${ darkMode
+      <div className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-3xl bg-white dark:bg-black border-t border-gray-300 dark:border-gray-700 p-4 flex flex-col sm:flex-row gap-3 z-50`}>
+        <input
+          type="text"
+          className={`flex-1 rounded-full px-4 py-3 border focus:outline-none ${
+            darkMode
               ? "border-gray-700 bg-gray-900 text-white"
-              : "border-gray-300 text-black"}`}
-          value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type your message..."/>
-
+              : "border-gray-300 text-black"
+          }`}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type your message..."
+        />
         <div className="flex gap-2">
-          <button onClick={handleInput} disabled={loading} className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition"> Send </button>
-         
-          <button onClick={clearChat} className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition"> Clear </button>
-         
-          <button onClick={handleVoiceInput} className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition">🎙️ Speak </button>
+          <button
+            onClick={handleInput}
+            disabled={loading}
+            className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition"
+          >
+            Send
+          </button>
+          <button
+            onClick={clearChat}
+            className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition"
+          >
+            Clear
+          </button>
+          <button
+            onClick={handleVoiceInput}
+            className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition"
+          >
+            🎙️ Speak
+          </button>
         </div>
       </div>
     </div>

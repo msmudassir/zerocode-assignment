@@ -1,6 +1,6 @@
-"use client"; // Since you're using a client component (RegisterPage)
+"use client"; 
 
-import RegisterPage from "./register/page"; // ✅ Adjust path based on your structure
+import RegisterPage from "./register/page";
 
 export default function Home() {
   return (
