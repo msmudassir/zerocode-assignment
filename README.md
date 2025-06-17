@@ -20,6 +20,47 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+# 🤖 Gemini Voice Chatbot
+
+An AI-powered chatbot built with **Next.js (App Router)**, **Tailwind CSS**, and the **Google Gemini API**, featuring:
+
+- ✅ Voice input using Web Speech API
+- ✅ Text-to-speech output
+- ✅ Dark/light mode toggle
+- ✅ Real-time chat interface
+- ✅ Mobile-responsive UI
+- ✅ Easily deployable to Vercel
+
+---
+
+## 🚀 Demo
+
+🟢 Try it live: [https://zerocode-assignment.vercel.app/]  
+🧠 Ask it:  
+- "What is JWT authentication in Express?"  
+- "Explain useEffect in React."  
+- "How to connect MongoDB in Next.js?"
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **AI**: [Google Gemini API](https://ai.google.dev/)
+- **Voice**: Web Speech API (SpeechRecognition + SpeechSynthesis)
+- **Deployment**: [Vercel](https://vercel.com/)
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/msmudassir/zerocode-assignment.git
+cd zerocode-assignment
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
